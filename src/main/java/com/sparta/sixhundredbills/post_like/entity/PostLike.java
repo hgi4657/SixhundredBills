@@ -7,14 +7,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 게시물 좋아요 엔티티 클래스
  */
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class PostLike extends TimeStamp {
 

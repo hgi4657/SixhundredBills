@@ -44,6 +44,17 @@ public class PostController {
     }
 
     /**
+     * 게시물 단건 조회
+     * @param postId 요청한 게시물 ID
+     * @return 게시물 응답 데이터
+     */
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId) {
+        PostResponseDto responseDto = postService.getPostById(postId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    /**
      * 게시물 수정
      * @param postId 수정할 게시물의 ID
      * @param postRequestDto 수정할 게시물의 정보

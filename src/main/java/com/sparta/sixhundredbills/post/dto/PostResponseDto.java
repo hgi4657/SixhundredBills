@@ -15,9 +15,10 @@ public class PostResponseDto {
     private String category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int postLikeCount;
 
     @Builder
-    public PostResponseDto(Long id, Long userId, String showName, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public PostResponseDto(Long id, Long userId, String showName, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt, int postLikeCount) {
         this.id = id;
         this.userId = userId;
         this.showName = showName;
@@ -25,6 +26,7 @@ public class PostResponseDto {
         this.category = category;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.postLikeCount = postLikeCount;
     }
 
     /**
@@ -39,5 +41,6 @@ public class PostResponseDto {
         this.category = post.getCategory();
         this.createdAt = post.getCreatedAt();
         this.updatedAt = post.getModifiedAt();
+        this.postLikeCount = post.getLikeCount();
     }
 }

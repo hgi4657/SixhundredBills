@@ -17,10 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +62,20 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.map(PostResponseDto::new);
+    }
+
+    /**
+     * 게시물 단건 조회
+     * @param postId 요청한 게시물 ID
+     * @return 게시물 응답 데이터
+     */
+    public PostResponseDto getPostById(Long postId) {
+        Post post = findPostById(postId);
+
+        int likeCount = postLikeRepository.countByPostId(postId);
+        post.updateLikeCount(likeCount);
+
+        return new PostResponseDto(post);
     }
 
     /**
@@ -125,4 +137,5 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundPostException(ErrorEnum.NOT_POST));
     }
+
 }

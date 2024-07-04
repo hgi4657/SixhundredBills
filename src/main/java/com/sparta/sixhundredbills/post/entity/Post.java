@@ -44,4 +44,9 @@ public class Post extends TimeStamp {
         this.showName = showName;
         this.likeCount = likeCount;
     }
+
+    // 좋아요 수 업데이트 메서드
+    public void updateLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 }
