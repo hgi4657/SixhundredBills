@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentResponseDto {
+public class CommentLikeResponseDto {
     private String showName; // 익명으로 표시될 이름
     private String comment;
+    private Long commentLikeCount;
 
-    public CommentResponseDto(Comment comment) {
+    public CommentLikeResponseDto(Comment comment, Long commentLikeCount) {
         this.showName = comment.getShowName();
         this.comment = comment.getComment();
+        this.commentLikeCount = commentLikeCount;
     }
 }

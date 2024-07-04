@@ -3,6 +3,7 @@ package com.sparta.sixhundredbills.comment.controller;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.comment.dto.CommentDeleteResponseDto;
+import com.sparta.sixhundredbills.comment.dto.CommentLikeResponseDto;
 import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
@@ -58,6 +59,18 @@ public class CommentController {
                                                                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         List<CommentResponseDto> response = commentService.getComments(postId, page - 1, size, sortBy);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 댓글 단건 조회
+     * @param postId 게시물 ID
+     * @param commentId 댓글 ID
+     * @return 댓글 응답 데이터
+     */
+    @GetMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<CommentLikeResponseDto> getCommentById (@PathVariable Long postId, @PathVariable Long commentId) {
+        CommentLikeResponseDto responseDto = commentService.getCommentById(postId, commentId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     /**

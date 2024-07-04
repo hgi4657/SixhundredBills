@@ -4,10 +4,13 @@ import com.sparta.sixhundredbills.auth.entity.Role;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
+import com.sparta.sixhundredbills.comment.dto.CommentLikeResponseDto;
 import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.repository.CommentRepository;
+import com.sparta.sixhundredbills.comment_like.repository.CommentLikeRepository;
+import com.sparta.sixhundredbills.comment_like.service.CommentLikeService;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.NotFoundCommentException;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
@@ -32,6 +35,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostService postService;
+    private final CommentLikeRepository commentLikeRepository;
 
     /**
      * 댓글 생성
@@ -99,6 +103,21 @@ public class CommentService {
             throw new NotFoundPostException(ErrorEnum.NOT_POST);
         }
         return responseDtoList;
+    }
+
+    /**
+     * 댓글 단건 조회
+     * @param postId 게시물 ID
+     * @param commentId 댓글 ID
+     * @return
+     */
+    public CommentLikeResponseDto getCommentById(Long postId, Long commentId) {
+        Post post = postService.findPostById(postId);
+        Comment comment = findByCommentId(commentId);
+
+        Long likeCount = commentLikeRepository.countByCommentId(commentId);
+
+        return new CommentLikeResponseDto(comment,likeCount);
     }
 
     /**
@@ -173,4 +192,5 @@ public class CommentService {
             commentRepository.delete(childComment);
         }
     }
+
 }
