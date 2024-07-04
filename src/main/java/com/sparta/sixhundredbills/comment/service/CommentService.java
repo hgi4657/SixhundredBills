@@ -121,6 +121,16 @@ public class CommentService {
     }
 
     /**
+     * 사용자가 좋아요한 댓글 조회
+     * @param user 사용자
+     * @param pageable 페이지네이션
+     * @return 댓글 응답 데이터
+     */
+    public Page<Comment> getLikeCommentsByUser(User user, Pageable pageable) {
+        return commentLikeRepository.findLikeCommentsByUserId(user.getId(), pageable);
+    }
+
+    /**
      * 댓글 수정
      * @param postId 게시물 ID
      * @param commentId 댓글 ID

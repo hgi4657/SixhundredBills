@@ -9,6 +9,8 @@ import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -71,6 +73,19 @@ public class CommentController {
     public ResponseEntity<CommentLikeResponseDto> getCommentById (@PathVariable Long postId, @PathVariable Long commentId) {
         CommentLikeResponseDto responseDto = commentService.getCommentById(postId, commentId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    /**
+     * 사용자가 좋아요한 댓글 조회
+     * @param userDetails 인증된 유저
+     * @param pageable 페이지네이션
+     * @return 페이지네이션된 댓글 응답 데이터
+     */
+    @GetMapping("/comments/myLikes")
+    public ResponseEntity<Page<CommentLikeResponseDto>> getLikeComments(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<Comment> likeComments = commentService.getLikeCommentsByUser(userDetails.getUser(), pageable);
+        Page<CommentLikeResponseDto> responseDtos = likeComments.map(comment -> new CommentLikeResponseDto());
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     /**
