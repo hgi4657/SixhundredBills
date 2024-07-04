@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 게시물 좋아요 레포지토리 인터페이스
  */
-public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
+public interface PostLikeRepository extends JpaRepository<PostLike, Long>, PostLikeRepositoryCustom {
     // 사용자와 게시물로 좋아요 찾기
     Optional<PostLike> findByUserAndPost(User user, Post post);
 

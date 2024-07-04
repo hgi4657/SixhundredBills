@@ -79,6 +79,16 @@ public class PostService {
     }
 
     /**
+     * 사용자가 좋아요한 게시물 조회
+     * @param user 사용자
+     * @param pageable 페이지네이션
+     * @return 게시물 응답 데이터
+     */
+    public Page<Post> getLikePostsByUser(User user, Pageable pageable) {
+        return postLikeRepository.findLikePostsByUserId(user.getId(), pageable);
+    }
+
+    /**
      * 게시물 수정
      * @param postId 수정할 게시물의 ID
      * @param postRequestDto 수정할 게시물의 정보

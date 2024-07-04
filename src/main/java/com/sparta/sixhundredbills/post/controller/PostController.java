@@ -3,9 +3,11 @@ package com.sparta.sixhundredbills.post.controller;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.post.dto.PostRequestDto;
 import com.sparta.sixhundredbills.post.dto.PostResponseDto;
+import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,6 +57,19 @@ public class PostController {
     }
 
     /**
+     * 사용자가 좋아요한 게시글 조회
+     * @param userDetails 인증된 유저
+     * @param pageable 페이지네이션
+     * @return 페이지네이션된 게시물 응답 데이터
+     */
+    @GetMapping("/myLikes")
+    public ResponseEntity<Page<PostResponseDto>> getMyLikePosts(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<Post> likePosts = postService.getLikePostsByUser(userDetails.getUser(), pageable);
+        Page<PostResponseDto> responseDtos = likePosts.map(PostResponseDto::new);
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    }
+
+    /**
      * 게시물 수정
      * @param postId 수정할 게시물의 ID
      * @param postRequestDto 수정할 게시물의 정보
@@ -78,4 +93,5 @@ public class PostController {
         postService.deletePost(postId, userDetails.getUser());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
