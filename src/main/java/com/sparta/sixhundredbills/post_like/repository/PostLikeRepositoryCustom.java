@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostLikeRepositoryCustom {
     Page<Post> findLikePostsByUserId(Long id, Pageable pageable);
+    Long countByUserId(Long id);
 }

@@ -38,4 +38,14 @@ public class PostLikeRepositoryImpl implements PostLikeRepositoryCustom {
 
         return new PageImpl<>(posts, pageable, postSize);
     }
+
+    @Override
+    public Long countByUserId(Long userId) {
+        QPostLike postLike = QPostLike.postLike;
+        return jpaQueryFactory
+                .select(postLike.count())
+                .from(postLike)
+                .where(postLike.user.id.eq(userId))
+                .fetchOne();
+    }
 }

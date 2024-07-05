@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface CommentLikeRepositoryCustom {
     Long countByCommentId(Long commentId);
     Page<Comment> findLikeCommentsByUserId(Long userId, Pageable pageable);
+    Long countByUserId(Long userId);
 }

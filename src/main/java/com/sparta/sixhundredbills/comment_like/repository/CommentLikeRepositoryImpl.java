@@ -50,4 +50,14 @@ public class CommentLikeRepositoryImpl implements CommentLikeRepositoryCustom {
 
         return new PageImpl<>(comments, pageable, commentSize);
     }
+
+    @Override
+    public Long countByUserId(Long userId) {
+        QCommentLike commentLike = QCommentLike.commentLike;
+        return queryFactory
+                .select(commentLike.count())
+                .from(commentLike)
+                .where(commentLike.user.id.eq(userId))
+                .fetchOne();
+    }
 }

@@ -4,6 +4,7 @@ import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.profile.dto.ProfileResponseDto;
 import com.sparta.sixhundredbills.profile.service.ProfileService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

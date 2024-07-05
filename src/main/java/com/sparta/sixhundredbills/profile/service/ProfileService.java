@@ -2,8 +2,10 @@ package com.sparta.sixhundredbills.profile.service;
 
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
+import com.sparta.sixhundredbills.comment_like.repository.CommentLikeRepository;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.InvalidEnteredException;
+import com.sparta.sixhundredbills.post_like.repository.PostLikeRepository;
 import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.profile.dto.ProfileResponseDto;
 import com.sparta.sixhundredbills.profile.entity.PasswordList;
@@ -23,6 +25,8 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final PasswordListRepository passwordListRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     // 각 사용자가 가질 수 있는 패스워드 리스트 최대 사이즈
     private static final int LIST_MAX_SIZE = 3;
@@ -34,7 +38,9 @@ public class ProfileService {
      * */
     public ProfileResponseDto getProfile(User user) {
         // 인증된 유저 정보를 프로필 Dto 에 필요한 내용만 담아서 반환
-        return ProfileResponseDto.fromUser(user);
+        Long likePostsCount = countLikePostsByUser(user);
+        Long likeCommentsCount = countLikeCommentsByUser(user);
+        return new ProfileResponseDto(user, likePostsCount, likeCommentsCount);
     }
 
     /**
@@ -88,6 +94,16 @@ public class ProfileService {
 
         // 수정 완료된 유저 정보를 프로필 Dto 에 내용을 담아서 반환
         return ProfileResponseDto.fromUser(getUser);
+    }
+
+    // 사용자가 좋아요한 게시물 개수
+    public Long countLikePostsByUser(User user) {
+        return postLikeRepository.countByUserId(user.getId());
+    }
+
+    // 사용자가 좋아요한 댓글 개수
+    public Long countLikeCommentsByUser(User user) {
+        return commentLikeRepository.countByUserId(user.getId());
     }
 
 }
