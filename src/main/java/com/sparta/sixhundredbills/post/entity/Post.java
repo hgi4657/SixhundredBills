@@ -1,12 +1,17 @@
 package com.sparta.sixhundredbills.post.entity;
 
 import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.comment.entity.Comment;
+import com.sparta.sixhundredbills.post_like.entity.PostLike;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +26,12 @@ public class Post extends TimeStamp {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes = new ArrayList<>();
 
     private String category;
     private String content;

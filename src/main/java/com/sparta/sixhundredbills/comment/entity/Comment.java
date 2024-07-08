@@ -2,6 +2,7 @@ package com.sparta.sixhundredbills.comment.entity;
 
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
+import com.sparta.sixhundredbills.comment_like.entity.CommentLike;
 import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
@@ -37,6 +38,9 @@ public class Comment extends TimeStamp {
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> childrenComment = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
     private String showName;
     private String comment;
