@@ -6,6 +6,8 @@ import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.InvalidEnteredException;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
+import com.sparta.sixhundredbills.post.dto.FollowingPostSearchCond;
+import com.sparta.sixhundredbills.post.dto.PageDto;
 import com.sparta.sixhundredbills.post.dto.PostRequestDto;
 import com.sparta.sixhundredbills.post.dto.PostResponseDto;
 import com.sparta.sixhundredbills.post.entity.Post;
@@ -146,6 +148,20 @@ public class PostService {
     public Post findPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundPostException(ErrorEnum.NOT_POST));
+    }
+
+    /**
+     * 팔로워 게시글 목록 조회 기능
+     * @param user
+     * @param pageDto
+     * @param sortType
+     * @return
+     */
+    public Page<PostResponseDto> findFollowedUserPosts(User user, PageDto pageDto, FollowingPostSearchCond.SortType sortType) {
+        return postRepository.findPostsByFollowingUser(FollowingPostSearchCond.builder()
+                .followingUserId(user.getId())
+                .sortType(sortType)
+                .build(), pageDto.toPageable()).map(PostResponseDto::new);
     }
 
 }
