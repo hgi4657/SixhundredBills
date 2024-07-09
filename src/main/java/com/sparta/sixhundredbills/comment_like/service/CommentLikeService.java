@@ -3,6 +3,7 @@ package com.sparta.sixhundredbills.comment_like.service;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.repository.CommentRepository;
+import com.sparta.sixhundredbills.comment.service.CommentService;
 import com.sparta.sixhundredbills.comment_like.dto.CommentLikeResponseDto;
 import com.sparta.sixhundredbills.comment_like.entity.CommentLike;
 import com.sparta.sixhundredbills.comment_like.repository.CommentLikeRepository;
@@ -21,7 +22,7 @@ import java.util.Optional;
 public class CommentLikeService {
 
     private final CommentLikeRepository commentLikeRepository;
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     /**
      * 댓글에 좋아요를 추가하는 메서드.
@@ -33,11 +34,17 @@ public class CommentLikeService {
      */
     public CommentLikeResponseDto likeComment(Long postId, Long commentId, User user) {
         // 댓글 존재 여부 확인
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ErrorEnum.COMMENT_NOT_FOUND));
+        Comment comment = commentService.findByCommentId(commentId);
+
+        User commentUser = comment.getUser();
+
+        // 유저가 null 인지 아닌지 확인
+        if (commentUser == null) {
+            throw new CustomException(ErrorEnum.USER_NOT_FOUND);
+        }
 
         // 자신이 작성한 댓글에 좋아요를 누를 수 없도록 예외 처리
-        if (comment.getUser().getId().equals(user.getId())) {
+        if (commentUser.getId().equals(user.getId())) {
             throw new CustomException(ErrorEnum.CANNOT_LIKE_OWN_COMMENT);
         }
 
@@ -75,8 +82,7 @@ public class CommentLikeService {
 
     public CommentLikeResponseDto unlikeComment(Long postId, Long commentId, User user) {
         // 댓글 존재 여부 확인
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(ErrorEnum.COMMENT_NOT_FOUND));
+        Comment comment = commentService.findByCommentId(commentId);
 
         // 좋아요가 눌린 적이 있는지 확인
         CommentLike commentLike = commentLikeRepository.findByUserAndComment(user, comment)

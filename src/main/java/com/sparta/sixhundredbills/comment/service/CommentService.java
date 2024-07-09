@@ -11,10 +11,7 @@ import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.repository.CommentRepository;
 import com.sparta.sixhundredbills.comment_like.repository.CommentLikeRepository;
 import com.sparta.sixhundredbills.comment_like.service.CommentLikeService;
-import com.sparta.sixhundredbills.exception.ErrorEnum;
-import com.sparta.sixhundredbills.exception.NotFoundCommentException;
-import com.sparta.sixhundredbills.exception.NotFoundPostException;
-import com.sparta.sixhundredbills.exception.UnauthorizedException;
+import com.sparta.sixhundredbills.exception.*;
 import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.post.service.PostService;
 import com.sparta.sixhundredbills.util.AnonymousNameGenerator;
@@ -144,7 +141,14 @@ public class CommentService {
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
 
-        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
+        User commentUser = comment.getUser();
+
+        // 유저가 null 인지 아닌지 확인
+        if (commentUser == null) {
+            throw new CustomException(ErrorEnum.USER_NOT_FOUND);
+        }
+
+        if (!commentUser.getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
             throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
@@ -180,8 +184,14 @@ public class CommentService {
         Post post = postService.findPostById(postId);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
+        User commentUser = comment.getUser();
 
-        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
+        // 유저가 null 인지 아닌지 확인
+        if (commentUser == null) {
+            throw new CustomException(ErrorEnum.USER_NOT_FOUND);
+        }
+
+        if (!commentUser.getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
             throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
